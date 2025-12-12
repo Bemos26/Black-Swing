@@ -4,6 +4,9 @@ from django.contrib import messages
 from accounts.models import MemberProfile, CustomUser
 from accounts.forms import MemberProfileForm, UserUpdateForm
 from booking.models import Booking
+from core.models import ServiceBooking, ContactMessage
+from django.core.mail import send_mail
+from django.conf import settings
 from portfolio.models import Project
 from portfolio.forms import ProjectForm
 
@@ -28,6 +31,12 @@ def admin_dashboard(request):
     # Get pending teachers
     pending_teachers = MemberProfile.objects.filter(is_approved=False)
     
+    # Get pending service bookings
+    pending_service_bookings = ServiceBooking.objects.filter(status='Pending')
+    
+    # Get unread contact messages
+    unread_messages = ContactMessage.objects.filter(is_read=False)
+    
     # Statistics
     total_users = CustomUser.objects.count()
     total_teachers = MemberProfile.objects.filter(is_approved=True).count()
@@ -35,6 +44,8 @@ def admin_dashboard(request):
     
     context = {
         'pending_teachers': pending_teachers,
+        'pending_service_bookings': pending_service_bookings,
+        'unread_messages': unread_messages,
         'total_users': total_users,
         'total_teachers': total_teachers,
         'pending_bookings': pending_bookings,
@@ -74,7 +85,27 @@ def approve_teacher(request, profile_id):
     profile.is_approved = True
     profile.save()
     
-    messages.success(request, f"{profile.user.first_name}'s profile approved.")
+    # Send Approval Email
+    subject = 'Welcome to the Team! - Black Swing'
+    message = f"""
+    Dear {profile.user.first_name},
+
+    Congratulations! Your application to join Black Swing as a {profile.role} has been approved.
+    
+    You can now log in to your dashboard to manage your schedule and profile.
+
+    Best regards,
+    Black Swing Team
+    """
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL if hasattr(settings, 'DEFAULT_FROM_EMAIL') else 'info@blackswing.com',
+        [profile.user.email],
+        fail_silently=False,
+    )
+    
+    messages.success(request, f"{profile.user.first_name}'s profile approved and email sent.")
     return redirect('manage_teachers') # Redirect to list instead of dash
 
 @login_required

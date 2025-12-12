@@ -59,6 +59,74 @@
                     </div>
                 </div>
 
+                <!-- Pending Service Bookings (Notifications) -->
+                {% if pending_service_bookings %}
+                <div class="card mb-4 border-info">
+                    <div class="card-header bg-info text-dark">
+                        <h5 class="mb-0"><i class="bi bi-bell me-2"></i>New Service Bookings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Service</th>
+                                        <th>Client</th>
+                                        <th>Event Date</th>
+                                        <th>Est. Budget</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for booking in pending_service_bookings %}
+                                    <tr>
+                                        <td>{{ booking.service.title }}</td>
+                                        <td>
+                                            <div>{{ booking.client_name }}</div>
+                                            <div class="small text-muted">{{ booking.location }}</div>
+                                        </td>
+                                        <td>{{ booking.event_date }}</td>
+                                        <td>KES {{ booking.projected_cost|default:"-" }}</td>
+                                        <td>
+                                            <a href="/admin/core/servicebooking/{{ booking.id }}/change/"
+                                                target="_blank" class="btn btn-sm btn-outline-primary">
+                                                Review
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Unread Messages (Notifications) -->
+                {% if unread_messages %}
+                <div class="card mb-4 border-danger">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0"><i class="bi bi-envelope me-2"></i>Unread Messages</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            {% for message in unread_messages %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>{{ message.subject }}</strong> - <span class="text-muted">{{ message.name
+                                        }}</span>
+                                    <div class="small text-truncate" style="max-width: 300px;">{{ message.message }}
+                                    </div>
+                                </div>
+                                <a href="/admin/core/contactmessage/{{ message.id }}/change/" target="_blank"
+                                    class="btn btn-sm btn-outline-danger">View</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+
                 <!-- Pending Approvals -->
                 {% if pending_teachers %}
                 <div class="card mb-4 border-warning">
