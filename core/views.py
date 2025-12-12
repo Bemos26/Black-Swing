@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from portfolio.models import Project
+from portfolio.models import Project, TeamMember
 from .models import Service, ServiceBooking
 from .forms import ContactForm, ServiceBookingForm
 from django.contrib import messages
@@ -14,7 +14,8 @@ def index(request):
     else:
         form = ContactForm()
 
-    projects = Project.objects.all()
+    projects = Project.objects.all().order_by('-created_at')
+    team_members = TeamMember.objects.filter(is_active=True).order_by('order', 'name')
     services = Service.objects.all()
     # Fallback if no services exist yet (for initial load safety)
     if not services:
@@ -22,6 +23,7 @@ def index(request):
         
     return render(request, 'core/index.html', {
         'projects': projects, 
+        'team_members': team_members,
         'form': form,
         'services': services
     })

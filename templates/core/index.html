@@ -346,56 +346,7 @@
         </div>
         {% endfor %}
 
-        <!-- Static Items for layout demonstration until dynamic items are populated -->
-        <!-- Static Items for layout demonstration -->
-        <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-live">
-          <img src="{% static 'img/masonry-portfolio/event_1.jpg' %}" class="img-fluid" alt="">
-          <div class="portfolio-info">
-            <h4>Live Performance</h4>
-            <p>Black Swing Event</p>
-            <a href="{% static 'img/masonry-portfolio/event_1.jpg' %}" title="Live Performance"
-              data-gallery="portfolio-gallery-live" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-            <a href="{% url 'portfolio_details' %}" title="More Details" class="details-link"><i
-                class="bi bi-link-45deg"></i></a>
-          </div>
-        </div><!-- End Portfolio Item -->
-
-        <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-live">
-          <img src="{% static 'img/masonry-portfolio/event_2.jpg' %}" class="img-fluid" alt="">
-          <div class="portfolio-info">
-            <h4>Live Performance</h4>
-            <p>Black Swing Event</p>
-            <a href="{% static 'img/masonry-portfolio/event_2.jpg' %}" title="Live Performance"
-              data-gallery="portfolio-gallery-live" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-            <a href="{% url 'portfolio_details' %}" title="More Details" class="details-link"><i
-                class="bi bi-link-45deg"></i></a>
-          </div>
-        </div><!-- End Portfolio Item -->
-
-        <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-live">
-          <img src="{% static 'img/masonry-portfolio/event_3.jpg' %}" class="img-fluid" alt="">
-          <div class="portfolio-info">
-            <h4>Live Performance</h4>
-            <p>Black Swing Event</p>
-            <a href="{% static 'img/masonry-portfolio/event_3.jpg' %}" title="Live Performance"
-              data-gallery="portfolio-gallery-live" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-            <a href="{% url 'portfolio_details' %}" title="More Details" class="details-link"><i
-                class="bi bi-link-45deg"></i></a>
-          </div>
-        </div><!-- End Portfolio Item -->
-
-        <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-live">
-          <img src="{% static 'img/masonry-portfolio/event_4.jpg' %}" class="img-fluid" alt="">
-          <div class="portfolio-info">
-            <h4>Live Performance</h4>
-            <p>Black Swing Event</p>
-            <a href="{% static 'img/masonry-portfolio/event_4.jpg' %}" title="Live Performance"
-              data-gallery="portfolio-gallery-live" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
-            <a href="{% url 'portfolio_details' %}" title="More Details" class="details-link"><i
-                class="bi bi-link-45deg"></i></a>
-          </div>
-        </div><!-- End Portfolio Item -->
-
+        <!-- Static items removed. Dynamic content populated from database. -->
       </div><!-- End Portfolio Container -->
 
     </div>
@@ -433,92 +384,34 @@
 
     <div class="row gy-4">
 
+      {% for member in team_members %}
       <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
         <div class="team-member">
           <div class="member-img">
-            <img src="{% static 'img/team/denzel_ccoga.jpg' %}" class="img-fluid" alt="">
+            {% if member.image %}
+            <img src="{{ member.image.url }}" class="img-fluid" alt="{{ member.name }}">
+            {% else %}
+            <!-- Placeholder if no image -->
+            <div class="d-flex align-items-center justify-content-center bg-secondary text-white"
+              style="height: 300px; width: 100%;">
+              <span class="fs-1">{{ member.name|first }}</span>
+            </div>
+            {% endif %}
           </div>
           <div class="member-info">
-            <h4>Denzel Ccoga</h4>
-            <span>Clarinet</span>
+            <h4>{{ member.name }}</h4>
+            <span>{{ member.get_role_display }}</span>
+            {% if member.bio %}
+            <p class="mt-2 small">{{ member.bio|truncatewords:15 }}</p>
+            {% endif %}
           </div>
         </div>
       </div><!-- End Team Member -->
-
-      <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
-        <div class="team-member">
-          <div class="member-img">
-            <img src="{% static 'img/team/benson_mose.jpg' %}" class="img-fluid" alt="">
-          </div>
-          <div class="member-info">
-            <h4>Benson Mose</h4>
-            <span>Trumpet</span>
-          </div>
-        </div>
-      </div><!-- End Team Member -->
-
-      <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="300">
-        <div class="team-member">
-          <div class="member-img">
-            <img src="{% static 'img/team/bengriffins.jpg' %}" class="img-fluid" alt="">
-          </div>
-          <div class="member-info">
-            <h4>BenGriffins</h4>
-            <span>Saxophonist</span>
-          </div>
-        </div>
-      </div><!-- End Team Member -->
-
-      <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="400">
-        <div class="team-member">
-          <div class="member-img">
-            <!-- Image to be updated later -->
-          </div>
-          <div class="member-info">
-            <h4>Micah Mose</h4>
-            <span>Piano/Guitar</span>
-          </div>
-        </div>
-      </div><!-- End Team Member -->
-
-      <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
-        <div class="team-member">
-          <div class="member-img">
-            <!-- Placeholder for extra member -->
-            <img src="{% static 'img/team/morgan_gitonga.jpg' %}" class="img-fluid" alt="">
-          </div>
-          <div class="member-info">
-            <h4>Morgan Gitonga</h4>
-            <span>Trumpet</span>
-          </div>
-        </div>
-      </div><!-- End Team Member -->
-
-      <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
-        <div class="team-member">
-          <div class="member-img">
-            <!-- Placeholder for extra member -->
-            <img src="{% static 'img/team/nick.jpg' %}" class="img-fluid" alt="">
-          </div>
-          <div class="member-info">
-            <h4>Nick</h4>
-            <span>Saxophonist</span>
-          </div>
-        </div>
-      </div><!-- End Team Member -->
-
-      <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="300">
-        <div class="team-member">
-          <div class="member-img">
-            <!-- Placeholder for extra member -->
-            <!-- Image to be updated later -->
-          </div>
-          <div class="member-info">
-            <h4>Killion Lemi</h4>
-            <span>Bass Guitar</span>
-          </div>
-        </div>
-      </div><!-- End Team Member -->
+      {% empty %}
+      <div class="col-12 text-center">
+        <p>No team members found.</p>
+      </div>
+      {% endfor %}
 
     </div>
 

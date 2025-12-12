@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="breadcrumbs">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Add Gallery Item</h2>
+            <ol>
+                <li><a href="{% url 'admin_dashboard' %}">Admin</a></li>
+                <li><a href="{% url 'manage_gallery' %}">Gallery</a></li>
+                <li>Add</li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<section class="inner-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow border-0">
+                    <div class="card-body p-4">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Title</label>
+                                {{ form.title }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Category</label>
+                                {{ form.category }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Image</label>
+                                {{ form.image }}
+                                <div class="form-text">Choose a high-quality image for the portfolio.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Caption/Description</label>
+                                {{ form.description }}
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{% url 'manage_gallery' %}" class="btn btn-outline-secondary me-2">Cancel</a>
+                                <button type="submit" class="btn btn-primary px-4">Save Item</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

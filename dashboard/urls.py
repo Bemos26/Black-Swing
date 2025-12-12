@@ -12,10 +12,13 @@ urlpatterns = [
     path('admin/booking/delete/<int:booking_id>/', views.delete_booking, name='delete_booking'),
     path('admin/message/<int:message_id>/', views.view_message, name='view_message'),
     
-    path('admin/projects/', views.manage_projects, name='manage_projects'),
-    path('admin/projects/add/', views.add_project, name='add_project'),
-    path('admin/projects/edit/<int:project_id>/', views.edit_project, name='edit_project'),
-    path('admin/projects/delete/<int:project_id>/', views.delete_project, name='delete_project'),
+    path('admin/gallery/', views.manage_gallery, name='manage_gallery'),
+    path('admin/gallery/add/', views.add_gallery_item, name='add_gallery_item'),
+    path('admin/gallery/delete/<int:item_id>/', views.delete_gallery_item, name='delete_gallery_item'),
+    
+    path('admin/team/', views.manage_team, name='manage_team'),
+    path('admin/team/add/', views.add_team_member, name='add_team_member'),
+    path('admin/team/delete/<int:member_id>/', views.delete_team_member, name='delete_team_member'),
     
     path('student/', views.student_dashboard, name='student_dashboard'),
     path('teacher/', views.teacher_dashboard, name='teacher_dashboard'),

@@ -28,6 +28,20 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="card mb-4">
+                    <div class="card-header bg-white fw-bold">Management</div>
+                    <div class="list-group list-group-flush">
+                        <a href="{% url 'manage_gallery' %}" class="list-group-item list-group-item-action"><i
+                                class="bi bi-images me-2"></i>Gallery / Portfolio</a>
+                        <a href="{% url 'manage_team' %}" class="list-group-item list-group-item-action"><i
+                                class="bi bi-people me-2"></i>Team Members</a>
+                        <a href="{% url 'manage_teachers' %}" class="list-group-item list-group-item-action"><i
+                                class="bi bi-person-badge me-2"></i>Teachers</a>
+                        <a href="{% url 'manage_bookings' %}" class="list-group-item list-group-item-action"><i
+                                class="bi bi-calendar-event me-2"></i>Bookings</a>
+                    </div>
+                </div>
             </div>
 
             <div class="col-lg-9">
@@ -317,7 +331,7 @@
                             </div>
                             <div class="card-body">
                                 <p>Update homepage content, services, and portfolio.</p>
-                                <a href="{% url 'manage_projects' %}" class="btn btn-primary">Manage
+                                <a href="{% url 'manage_gallery' %}" class="btn btn-primary">Manage
                                     Content</a>
                             </div>
                         </div>

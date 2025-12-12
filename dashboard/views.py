@@ -9,8 +9,8 @@ from core.models import ServiceBooking, ContactMessage
 from core.forms import ServiceBookingApprovalForm
 from django.core.mail import send_mail, EmailMessage
 from django.conf import settings
-from portfolio.models import Project
-from portfolio.forms import ProjectForm
+from portfolio.models import Project, TeamMember
+from portfolio.forms import ProjectForm, TeamMemberForm
 import threading
 
 class EmailThread(threading.Thread):
@@ -352,3 +352,69 @@ def profile_settings(request):
         'user_form': user_form,
         'profile_form': profile_form
     })
+
+@login_required
+def manage_gallery(request):
+    if not request.user.is_superuser:
+        return redirect('dashboard_redirect')
+    items = Project.objects.all().order_by('-created_at')
+    return render(request, 'dashboard/manage_gallery.html', {'items': items})
+
+@login_required
+def add_gallery_item(request):
+    if not request.user.is_superuser:
+        return redirect('dashboard_redirect')
+    
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Gallery item added successfully.")
+            return redirect('manage_gallery')
+    else:
+        form = ProjectForm()
+    
+    return render(request, 'dashboard/add_gallery_item.html', {'form': form})
+
+@login_required
+def delete_gallery_item(request, item_id):
+    if not request.user.is_superuser:
+        return redirect('dashboard_redirect')
+        
+    item = get_object_or_404(Project, id=item_id)
+    item.delete()
+    messages.success(request, "Gallery item deleted successfully.")
+    return redirect('manage_gallery')
+
+@login_required
+def manage_team(request):
+    if not request.user.is_superuser:
+        return redirect('dashboard_redirect')
+    members = TeamMember.objects.all().order_by('order', 'name')
+    return render(request, 'dashboard/manage_team.html', {'members': members})
+
+@login_required
+def add_team_member(request):
+    if not request.user.is_superuser:
+        return redirect('dashboard_redirect')
+    
+    if request.method == 'POST':
+        form = TeamMemberForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Team member added successfully.")
+            return redirect('manage_team')
+    else:
+        form = TeamMemberForm()
+    
+    return render(request, 'dashboard/add_team_member.html', {'form': form})
+
+@login_required
+def delete_team_member(request, member_id):
+    if not request.user.is_superuser:
+        return redirect('dashboard_redirect')
+        
+    member = get_object_or_404(TeamMember, id=member_id)
+    member.delete()
+    messages.success(request, "Team member deleted successfully.")
+    return redirect('manage_team')

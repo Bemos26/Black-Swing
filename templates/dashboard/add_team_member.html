@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="breadcrumbs">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Add Team Member</h2>
+            <ol>
+                <li><a href="{% url 'admin_dashboard' %}">Admin</a></li>
+                <li><a href="{% url 'manage_team' %}">Team</a></li>
+                <li>Add</li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<section class="inner-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow border-0">
+                    <div class="card-body p-4">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Full Name</label>
+                                    {{ form.name }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Role / Instrument</label>
+                                    {{ form.role }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Display Order</label>
+                                {{ form.order }}
+                                <div class="form-text">Lower numbers appear first in the team list.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check form-switch ps-0">
+                                    <label class="form-check-label fw-bold me-3"
+                                        for="{{ form.is_active.id_for_label }}">Active (Visible)</label>
+                                    {{ form.is_active }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Profile Photo</label>
+                                {{ form.image }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Bio</label>
+                                {{ form.bio }}
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{% url 'manage_team' %}" class="btn btn-outline-secondary me-2">Cancel</a>
+                                <button type="submit" class="btn btn-primary px-4">Save Member</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
