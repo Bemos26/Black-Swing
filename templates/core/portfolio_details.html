@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="breadcrumbs">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Portfolio Details</h2>
+            <ol>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li>Portfolio Details</li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<section class="portfolio-details">
+    <div class="container">
+        <h3>Portfolio Details Placeholder</h3>
+        <p>This page is under construction.</p>
+    </div>
+</section>
+{% endblock %}
