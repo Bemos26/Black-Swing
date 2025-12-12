@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="breadcrumbs">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Book a Lesson</h2>
+            <ol>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'student_dashboard' %}">Dashboard</a></li>
+                <li>Book</li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<section class="inner-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-9">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-warning text-dark py-4 text-center">
+                        <h3 class="card-title fw-bold mb-0">Request a Lesson</h3>
+                        <p class="mb-0 opacity-75">Take your skills to the next level</p>
+                    </div>
+                    <div class="card-body p-5">
+                        <form method="post" class="needs-validation">
+                            {% csrf_token %}
+
+                            <!-- Instructor & Lesson Type -->
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Select
+                                        Instructor</label>
+                                    {{ form.teacher }}
+                                    {% if form.teacher.errors %}
+                                    <div class="text-danger small mt-1">{{ form.teacher.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Lesson
+                                        Type</label>
+                                    {{ form.lesson_type }}
+                                    {% if form.lesson_type.errors %}
+                                    <div class="text-danger small mt-1">{{ form.lesson_type.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Date & Time -->
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Preferred
+                                        Date</label>
+                                    {{ form.date }}
+                                    {% if form.date.errors %}
+                                    <div class="text-danger small mt-1">{{ form.date.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Preferred
+                                        Time</label>
+                                    {{ form.time }}
+                                    {% if form.time.errors %}
+                                    <div class="text-danger small mt-1">{{ form.time.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Notes -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-muted small text-uppercase">Additional
+                                    Notes</label>
+                                {{ form.notes }}
+                                <div class="form-text">Mention your current skill level or any specific songs/techniques
+                                    you'd like to learn.</div>
+                            </div>
+
+                            <div class="d-grid mt-5">
+                                <button type="submit" class="btn btn-dark btn-lg">
+                                    <i class="bi bi-send-fill me-2"></i>Submit Booking Request
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

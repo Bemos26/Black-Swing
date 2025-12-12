@@ -59,6 +59,60 @@
                     </div>
                 </div>
 
+                <!-- Pending Approvals -->
+                {% if pending_teachers %}
+                <div class="card mb-4 border-warning">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="bi bi-exclamation-circle me-2"></i>Pending Teacher Approvals</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Role</th>
+                                        <th>Date Applied</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for teacher in pending_teachers %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                {% if teacher.image %}
+                                                <img src="{{ teacher.image.url }}" class="rounded-circle me-2"
+                                                    width="40" height="40">
+                                                {% else %}
+                                                <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+                                                    style="width: 40px; height: 40px;">{{ teacher.user.first_name|first
+                                                    }}</div>
+                                                {% endif %}
+                                                <div>
+                                                    <div class="fw-bold">{{ teacher.user.first_name }} {{
+                                                        teacher.user.last_name }}</div>
+                                                    <div class="small text-muted">{{ teacher.user.email }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{ teacher.role }}</td>
+                                        <td>{{ teacher.user.date_joined|date:"M d, Y" }}</td>
+                                        <td>
+                                            <a href="{% url 'approve_teacher' teacher.id %}"
+                                                class="btn btn-sm btn-success">
+                                                <i class="bi bi-check-lg me-1"></i>Approve
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
                 <div class="row">
                     <div class="col-md-6 mb-4">
                         <div class="card h-100">
