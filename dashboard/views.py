@@ -77,6 +77,49 @@ def delete_teacher(request, profile_id):
     return redirect('manage_teachers')
 
 @login_required
+def approve_booking(request, booking_id):
+    if not request.user.is_superuser:
+        return redirect('dashboard_redirect')
+        
+    booking = get_object_or_404(ServiceBooking, id=booking_id)
+    
+    if request.method == 'POST':
+        projected_cost = request.POST.get('projected_cost')
+        if projected_cost:
+            booking.projected_cost = projected_cost
+            booking.status = 'Approved'
+            booking.save()
+            
+            # Send Approval Email
+            subject = f'Booking Confirmed: {booking.service.title}'
+            message = f"""
+            Dear {booking.client_name},
+
+            We are pleased to confirm your booking for {booking.service.title}.
+
+            Details:
+            Date: {booking.event_date}
+            Location: {booking.location}
+            Confirmed Cost: KES {booking.projected_cost}
+
+            Thank you for choosing Black Swing!
+
+            Best regards,
+            Black Swing Team
+            """
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL if hasattr(settings, 'DEFAULT_FROM_EMAIL') else 'info@blackswing.com',
+                [booking.email],
+                fail_silently=False,
+            )
+            
+            messages.success(request, f"Booking for {booking.client_name} approved and email sent.")
+            
+    return redirect('admin_dashboard')
+
+@login_required
 def approve_teacher(request, profile_id):
     if not request.user.is_superuser:
         return redirect('dashboard_redirect')

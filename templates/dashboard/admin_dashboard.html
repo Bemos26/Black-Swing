@@ -88,10 +88,54 @@
                                         <td>{{ booking.event_date }}</td>
                                         <td>KES {{ booking.projected_cost|default:"-" }}</td>
                                         <td>
-                                            <a href="/admin/core/servicebooking/{{ booking.id }}/change/"
-                                                target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#approveBookingModal{{ booking.id }}">
                                                 Review
-                                            </a>
+                                            </button>
+
+                                            <!-- Approval Modal -->
+                                            <div class="modal fade" id="approveBookingModal{{ booking.id }}"
+                                                tabindex="-1" aria-labelledby="approveBookingModalLabel{{ booking.id }}"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title"
+                                                                id="approveBookingModalLabel{{ booking.id }}">Review
+                                                                Booking: {{ booking.client_name }}</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <form action="{% url 'approve_booking' booking.id %}"
+                                                            method="post">
+                                                            {% csrf_token %}
+                                                            <div class="modal-body">
+                                                                <p><strong>Service:</strong> {{ booking.service.title }}
+                                                                </p>
+                                                                <p><strong>Date:</strong> {{ booking.event_date }}</p>
+                                                                <p><strong>Location:</strong> {{ booking.location }}</p>
+                                                                <p><strong>Message:</strong> {{ booking.message }}</p>
+
+                                                                <div class="mb-3">
+                                                                    <label for="projected_cost"
+                                                                        class="form-label">Confirmed Cost (KES)</label>
+                                                                    <input type="number" class="form-control"
+                                                                        name="projected_cost"
+                                                                        value="{{ booking.projected_cost|default:'' }}"
+                                                                        required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-success">Approve &
+                                                                    Send Email</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     {% endfor %}
