@@ -15,12 +15,13 @@ class ContactForm(forms.ModelForm):
 class ServiceBookingForm(forms.ModelForm):
     class Meta:
         model = ServiceBooking
-        fields = ['client_name', 'email', 'phone', 'event_date', 'location', 'message']
+        fields = ['client_name', 'email', 'phone', 'event_date', 'location', 'projected_cost', 'message']
         widgets = {
             'client_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your Name'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Your Email'}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number'}),
             'event_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Event Location'}),
+            'projected_cost': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Estimated Budget (KES)'}),
             'message': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Additional Details (Optional)'}),
         }

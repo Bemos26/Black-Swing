@@ -133,3 +133,6 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# Email Backend - Prints to console for dev
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
