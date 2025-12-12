@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="main">
+    <div class="page-title dark-background">
+        <div class="container">
+            <h1>Message Details</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+                    <li class="current">Message</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">From: {{ message.name }}</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Subject:</strong> {{ message.subject }}</p>
+                    <p><strong>Email:</strong> <a href="mailto:{{ message.email }}">{{ message.email }}</a></p>
+                    <p><strong>Received:</strong> {{ message.created_at }}</p>
+                    <hr>
+                    <div class="message-content p-3 bg-light rounded">
+                        {{ message.message|linebreaks }}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

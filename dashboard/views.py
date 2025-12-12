@@ -156,7 +156,37 @@ def approve_teacher(request, profile_id):
     )
     
     messages.success(request, f"{profile.user.first_name}'s profile approved and email sent.")
-    return redirect('manage_teachers') # Redirect to list instead of dash
+    return redirect('manage_teachers')
+
+@login_required
+def manage_bookings(request):
+    if not request.user.is_superuser:
+        return redirect('dashboard_redirect')
+        
+    # Fetch all bookings, ordered by newest first
+    bookings = ServiceBooking.objects.all().order_by('-created_at')
+    
+    return render(request, 'dashboard/manage_bookings.html', {'bookings': bookings})
+
+@login_required
+def view_message(request, message_id):
+    if not request.user.is_superuser:
+        return redirect('dashboard_redirect')
+        
+    message = get_object_or_404(ContactMessage, id=message_id)
+    
+    # Mark as read
+    if not message.is_read:
+        message.is_read = True
+        message.save()
+        
+    # For now, we can redirect back to dashboard or render a detail view.
+    # Since the user just wanted to view it and clear notification, let's show a simple detail page or redirect.
+    # To keep it simple and effective, let's redirect to a message detail modal or page. 
+    # But wait, the user said "view them". Let's assume they might want to read a long message.
+    # I'll create a simple message detail template or reuse dashboard with a modal? 
+    # Actually, a separate simple page is cleaner for "viewing".
+    return render(request, 'dashboard/message_detail.html', {'message': message}) # Redirect to list instead of dash
 
 @login_required
 def manage_projects(request):

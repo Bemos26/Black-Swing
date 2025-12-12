@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main class="main">
+    <div class="page-title dark-background">
+        <div class="container d-lg-flex justify-content-between align-items-center">
+            <h1 class="mb-2 mb-lg-0">Manage Bookings</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+                    <li class="current">Bookings</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="container">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">All Service Bookings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Service</th>
+                                    <th>Client</th>
+                                    <th>Date</th>
+                                    <th>Cost</th>
+                                    <th>Created At</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in bookings %}
+                                <tr>
+                                    <td>
+                                        {% if booking.status == 'Approved' %}
+                                        <span class="badge bg-success">Approved</span>
+                                        {% elif booking.status == 'Rejected' %}
+                                        <span class="badge bg-danger">Rejected</span>
+                                        {% else %}
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ booking.service.title }}</td>
+                                    <td>
+                                        <div>{{ booking.client_name }}</div>
+                                        <small class="text-muted">{{ booking.email }}</small>
+                                    </td>
+                                    <td>{{ booking.event_date }}</td>
+                                    <td>
+                                        {% if booking.projected_cost %}
+                                        KES {{ booking.projected_cost }}
+                                        {% else %}
+                                        -
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ booking.created_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        <!-- Reusing the modal logic here using the same ID would require including the form logic in this view. 
+                                             For now, let's keep it simple: if it's pending, link back to dashboard or show details.
+                                             Actually, let's just show details. -->
+                                        <button class="btn btn-sm btn-outline-secondary" disabled>View</button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" class="text-center py-4">No bookings found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
