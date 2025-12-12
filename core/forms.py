@@ -25,3 +25,10 @@ class ServiceBookingForm(forms.ModelForm):
             'projected_cost': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Estimated Budget (KES)'}),
             'message': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Additional Details (Optional)'}),
         }
+class ServiceBookingApprovalForm(forms.ModelForm):
+    class Meta:
+        model = ServiceBooking
+        fields = ['projected_cost']
+        widgets = {
+            'projected_cost': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Confirmed Cost (KES)', 'required': 'required'}),
+        }

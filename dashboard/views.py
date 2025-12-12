@@ -5,6 +5,7 @@ from accounts.models import MemberProfile, CustomUser
 from accounts.forms import MemberProfileForm, UserUpdateForm
 from booking.models import Booking
 from core.models import ServiceBooking, ContactMessage
+from core.forms import ServiceBookingApprovalForm
 from django.core.mail import send_mail
 from django.conf import settings
 from portfolio.models import Project
@@ -31,8 +32,12 @@ def admin_dashboard(request):
     # Get pending teachers
     pending_teachers = MemberProfile.objects.filter(is_approved=False)
     
-    # Get pending service bookings
-    pending_service_bookings = ServiceBooking.objects.filter(status='Pending')
+    # Get pending service bookings with forms
+    pending_bookings_query = ServiceBooking.objects.filter(status='Pending')
+    pending_service_bookings = []
+    for booking in pending_bookings_query:
+        form = ServiceBookingApprovalForm(instance=booking)
+        pending_service_bookings.append((booking, form))
     
     # Get unread contact messages
     unread_messages = ContactMessage.objects.filter(is_read=False)
@@ -84,9 +89,9 @@ def approve_booking(request, booking_id):
     booking = get_object_or_404(ServiceBooking, id=booking_id)
     
     if request.method == 'POST':
-        projected_cost = request.POST.get('projected_cost')
-        if projected_cost:
-            booking.projected_cost = projected_cost
+        form = ServiceBookingApprovalForm(request.POST, instance=booking)
+        if form.is_valid():
+            booking = form.save(commit=False)
             booking.status = 'Approved'
             booking.save()
             
@@ -116,6 +121,8 @@ def approve_booking(request, booking_id):
             )
             
             messages.success(request, f"Booking for {booking.client_name} approved and email sent.")
+        else:
+            messages.error(request, "Error approving booking. Please check details.")
             
     return redirect('admin_dashboard')
 
