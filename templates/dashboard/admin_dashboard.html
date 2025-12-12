@@ -37,15 +37,15 @@
                         <div class="card text-white bg-primary">
                             <div class="card-body">
                                 <h5 class="card-title">Total Users</h5>
-                                <p class="card-text fs-2">25</p>
+                                <p class="card-text fs-2">{{ total_users }}</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4 mb-4">
                         <div class="card text-white bg-success">
                             <div class="card-body">
-                                <h5 class="card-title">Band Members</h5>
-                                <p class="card-text fs-2">5</p>
+                                <h5 class="card-title">Active Teachers</h5>
+                                <p class="card-text fs-2">{{ total_teachers }}</p>
                             </div>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                         <div class="card text-white bg-warning">
                             <div class="card-body">
                                 <h5 class="card-title">Pending Bookings</h5>
-                                <p class="card-text fs-2">3</p>
+                                <p class="card-text fs-2">{{ pending_bookings }}</p>
                             </div>
                         </div>
                     </div>
@@ -121,7 +121,7 @@
                             </div>
                             <div class="card-body">
                                 <p>Add, edit, or remove band members and teachers.</p>
-                                <a href="#" class="btn btn-primary">Manage Teachers</a>
+                                <a href="{% url 'manage_teachers' %}" class="btn btn-primary">Manage Teachers</a>
                             </div>
                         </div>
                     </div>
@@ -132,7 +132,8 @@
                             </div>
                             <div class="card-body">
                                 <p>Update homepage content, services, and portfolio.</p>
-                                <a href="#" class="btn btn-primary">Manage Content</a>
+                                <a href="{% url 'manage_projects' %}" class="btn btn-primary">Manage
+                                    Content</a>
                             </div>
                         </div>
                     </div>

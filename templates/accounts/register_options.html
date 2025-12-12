@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="breadcrumbs">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Sign Up</h2>
+            <ol>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li>Register</li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<section class="inner-page">
+    <div class="container">
+        <div class="row justify-content-center">
+
+            <div class="col-md-5 mb-4">
+                <div class="card h-100 shadow border-0 text-center py-5 hover-card">
+                    <div class="card-body">
+                        <i class="bi bi-music-note-beamed display-1 text-warning mb-3"></i>
+                        <h3 class="fw-bold">I'm a Student</h3>
+                        <p class="text-muted mb-4">I want to book lessons and learn music.</p>
+                        <a href="{% url 'register_student' %}" class="btn btn-warning btn-lg px-5 rounded-pill">Join as
+                            Student</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5 mb-4">
+                <div class="card h-100 shadow border-0 text-center py-5 hover-card">
+                    <div class="card-body">
+                        <i class="bi bi-person-workspace display-1 text-dark mb-3"></i>
+                        <h3 class="fw-bold">I'm a Teacher</h3>
+                        <p class="text-muted mb-4">I want to teach and manage bookings.</p>
+                        <a href="{% url 'register_teacher' %}" class="btn btn-dark btn-lg px-5 rounded-pill">Apply as
+                            Teacher</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}

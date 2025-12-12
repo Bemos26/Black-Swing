@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="breadcrumbs">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Manage Content</h2>
+            <ol>
+                <li><a href="{% url 'admin_dashboard' %}">Admin</a></li>
+                <li>Projects</li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<section class="inner-page">
+    <div class="container">
+        <div class="card shadow border-0">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold">Portfolio Projects</h5>
+                <a href="{% url 'add_project' %}" class="btn btn-warning btn-sm rounded-pill px-3"><i
+                        class="bi bi-plus-lg me-1"></i>Add Project</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Project</th>
+                                <th>Category</th>
+                                <th>Client</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for project in projects %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        {% if project.image %}
+                                        <img src="{{ project.image.url }}" class="rounded me-2" width="60" height="40"
+                                            style="object-fit: cover;">
+                                        {% else %}
+                                        <div class="bg-secondary text-white rounded d-flex align-items-center justify-content-center me-2"
+                                            style="width: 60px; height: 40px;"><i class="bi bi-image"></i></div>
+                                        {% endif %}
+                                        <div class="fw-bold">{{ project.title }}</div>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-secondary">{{ project.get_category_display }}</span></td>
+                                <td>{{ project.client }}</td>
+                                <td>{{ project.project_date|date:"M d, Y" }}</td>
+                                <td>
+                                    <a href="{% url 'edit_project' project.id %}"
+                                        class="btn btn-sm btn-outline-primary me-1" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'delete_project' project.id %}"
+                                        class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?')"
+                                        title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">No projects found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

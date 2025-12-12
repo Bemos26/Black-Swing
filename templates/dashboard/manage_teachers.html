@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="breadcrumbs">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Manage Teachers</h2>
+            <ol>
+                <li><a href="{% url 'admin_dashboard' %}">Admin</a></li>
+                <li>Teachers</li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<section class="inner-page">
+    <div class="container">
+        <div class="card shadow border-0">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold">All Teachers</h5>
+                <!-- Can add 'Add Teacher' button here if needed manually -->
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Teacher</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for teacher in teachers %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        {% if teacher.image %}
+                                        <img src="{{ teacher.image.url }}" class="rounded-circle me-2" width="40"
+                                            height="40" style="object-fit: cover;">
+                                        {% else %}
+                                        <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+                                            style="width: 40px; height: 40px;">{{ teacher.user.first_name|first }}</div>
+                                        {% endif %}
+                                        <div>
+                                            <div class="fw-bold">{{ teacher.user.first_name }} {{ teacher.user.last_name
+                                                }}</div>
+                                            <div class="small text-muted">{{ teacher.user.email }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ teacher.role }}</td>
+                                <td>
+                                    {% if teacher.is_approved %}
+                                    <span
+                                        class="badge bg-success-subtle text-success border border-success px-3 rounded-pill">Active</span>
+                                    {% else %}
+                                    <span
+                                        class="badge bg-warning-subtle text-warning border border-warning px-3 rounded-pill">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not teacher.is_approved %}
+                                    <a href="{% url 'approve_teacher' teacher.id %}" class="btn btn-sm btn-success me-1"
+                                        title="Approve">
+                                        <i class="bi bi-check-lg"></i>
+                                    </a>
+                                    {% endif %}
+                                    <a href="{% url 'delete_teacher' teacher.id %}" class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Are you sure? This will delete the user account entirely.')"
+                                        title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted">No teachers found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

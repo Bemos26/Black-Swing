@@ -11,7 +11,7 @@ class Project(models.Model):
     title = models.CharField(max_length=200)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='app')
     client = models.CharField(max_length=200, blank=True)
-    project_date = models.DateField(auto_now_add=True)
+    project_date = models.DateField()
     url = models.URLField(blank=True)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='portfolio_images/')

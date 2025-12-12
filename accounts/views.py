@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
-from .forms import StudentRegistrationForm, UserLoginForm
+from .forms import StudentRegistrationForm, UserLoginForm, TeacherRegistrationForm
 from django.contrib import messages
+
+def register_options(request):
+    return render(request, 'accounts/register_options.html')
 
 def register_student(request):
     if request.method == 'POST':
@@ -9,12 +12,25 @@ def register_student(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, "Registration successful.")
-            return redirect('dashboard_redirect')
+            messages.success(request, "Student registration successful.")
+            return redirect('student_dashboard')
         messages.error(request, "Unsuccessful registration. Invalid information.")
     else:
         form = StudentRegistrationForm()
-    return render(request, 'accounts/register.html', {'form': form})
+    return render(request, 'accounts/register_student.html', {'form': form})
+
+def register_teacher(request):
+    if request.method == 'POST':
+        form = TeacherRegistrationForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Teacher registration successful! Please wait for approval.")
+            return redirect('teacher_dashboard')
+        messages.error(request, "Unsuccessful registration. Invalid information.")
+    else:
+        form = TeacherRegistrationForm()
+    return render(request, 'accounts/register_teacher.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':
