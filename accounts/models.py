@@ -10,7 +10,7 @@ class MemberProfile(models.Model):
     role = models.CharField(max_length=100, help_text="e.g. Guitarist, Vocalist")
     bio = models.TextField(blank=True)
     image = models.ImageField(upload_to='team_images/', blank=True, null=True)
-    is_approved = models.BooleanField(default=False)
+    is_approved = models.BooleanField(default=False, db_index=True)
     twitter_link = models.URLField(blank=True)
     facebook_link = models.URLField(blank=True)
     instagram_link = models.URLField(blank=True)

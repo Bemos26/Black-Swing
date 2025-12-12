@@ -23,7 +23,7 @@ class Booking(models.Model):
     lesson_type = models.CharField(max_length=50, choices=LESSON_TYPES)
     date = models.DateField()
     time = models.TimeField()
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     notes = models.TextField(blank=True)
 

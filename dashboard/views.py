@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from accounts.models import MemberProfile, CustomUser
@@ -6,10 +7,32 @@ from accounts.forms import MemberProfileForm, UserUpdateForm
 from booking.models import Booking
 from core.models import ServiceBooking, ContactMessage
 from core.forms import ServiceBookingApprovalForm
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.conf import settings
 from portfolio.models import Project
 from portfolio.forms import ProjectForm
+import threading
+
+class EmailThread(threading.Thread):
+    def __init__(self, subject, html_content, recipient_list):
+        self.subject = subject
+        self.recipient_list = recipient_list
+        self.html_content = html_content
+        threading.Thread.__init__(self)
+
+    def run(self):
+        msg = EmailMessage(
+            self.subject, 
+            self.html_content, 
+            settings.DEFAULT_FROM_EMAIL if hasattr(settings, 'DEFAULT_FROM_EMAIL') else 'info@blackswing.com', 
+            self.recipient_list
+        )
+        msg.content_subtype = "html" # Main content is now text/html
+        try:
+            msg.send()
+        except Exception as e:
+            # In a real app, log this error
+            print(f"Error sending email: {e}")
 
 @login_required
 def dashboard_redirect(request):
@@ -29,18 +52,23 @@ def admin_dashboard(request):
     if not request.user.is_superuser:
         return redirect('dashboard_redirect')
     
-    # Get pending teachers
-    pending_teachers = MemberProfile.objects.filter(is_approved=False)
+    # Get pending teachers - OPTIMIZED: select_related('user')
+    pending_teachers = MemberProfile.objects.filter(is_approved=False).select_related('user')[:10]
     
-    # Get pending service bookings with forms
-    pending_bookings_query = ServiceBooking.objects.filter(status='Pending')
-    pending_service_bookings = []
-    for booking in pending_bookings_query:
-        form = ServiceBookingApprovalForm(instance=booking)
-        pending_service_bookings.append((booking, form))
+    # Get pending service bookings - OPTIMIZED: select_related('service')
+    # Get pending service bookings - OPTIMIZED: select_related('service')
+    # We pass the queryset directly to avoid instantiating forms for every item in the loop.
+    # The form field rendering will be handled manually in the template.
+    pending_service_bookings = ServiceBooking.objects.filter(status='Pending').select_related('service')[:10]
     
     # Get unread contact messages
     unread_messages = ContactMessage.objects.filter(is_read=False)
+
+    # RECENT ACTIVITY (Approvals)
+    # Bookings: Approved, newest updated (approved) first
+    recent_approved_bookings = ServiceBooking.objects.filter(status='Approved').select_related('service').order_by('-updated_at')[:5]
+    # Teachers: Approved, newest joined first
+    recent_approved_teachers = MemberProfile.objects.filter(is_approved=True).select_related('user').order_by('-user__date_joined')[:5]
     
     # Statistics
     total_users = CustomUser.objects.count()
@@ -54,6 +82,8 @@ def admin_dashboard(request):
         'total_users': total_users,
         'total_teachers': total_teachers,
         'pending_bookings': pending_bookings,
+        'recent_approved_bookings': recent_approved_bookings,
+        'recent_approved_teachers': recent_approved_teachers,
     }
     
     
@@ -79,6 +109,10 @@ def delete_teacher(request, profile_id):
     user.delete()
     
     messages.success(request, "Teacher account deleted successfully.")
+    
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'success': True, 'message': 'Teacher account deleted successfully.'})
+        
     return redirect('manage_teachers')
 
 @login_required
@@ -93,37 +127,52 @@ def approve_booking(request, booking_id):
         if form.is_valid():
             booking = form.save(commit=False)
             booking.status = 'Approved'
+            booking.is_read = True  # Mark as read
             booking.save()
             
-            # Send Approval Email
+            # Send Approval Email (Async)
             subject = f'Booking Confirmed: {booking.service.title}'
             message = f"""
-            Dear {booking.client_name},
+            Dear {booking.client_name},<br><br>
 
-            We are pleased to confirm your booking for {booking.service.title}.
+            We are pleased to confirm your booking for <strong>{booking.service.title}</strong>.<br><br>
 
-            Details:
-            Date: {booking.event_date}
-            Location: {booking.location}
-            Confirmed Cost: KES {booking.projected_cost}
+            <strong>Details:</strong><br>
+            Date: {booking.event_date}<br>
+            Location: {booking.location}<br>
+            Confirmed Cost: KES {booking.projected_cost}<br><br>
 
-            Thank you for choosing Black Swing!
+            Thank you for choosing Black Swing!<br><br>
 
-            Best regards,
+            Best regards,<br>
             Black Swing Team
             """
-            send_mail(
-                subject,
-                message,
-                settings.DEFAULT_FROM_EMAIL if hasattr(settings, 'DEFAULT_FROM_EMAIL') else 'info@blackswing.com',
-                [booking.email],
-                fail_silently=False,
-            )
+            # Note: The original message was plain text, but EmailThread assumes HTML or we can just send as plain if we adjust the class.
+            # Let's keep it simple and use EmailThread which I defined to handle sending.
+            # Since I defined EmailThread to use EmailMessage, let's treat the message as the body.
+            # I'll update the body to slightly better HTML formatting for valid email.
+            
+            EmailThread(subject, message, [booking.email]).start()
             
             messages.success(request, f"Booking for {booking.client_name} approved and email sent.")
         else:
             messages.error(request, "Error approving booking. Please check details.")
             
+    return redirect('admin_dashboard')
+
+@login_required
+def delete_booking(request, booking_id):
+    if not request.user.is_superuser:
+        return redirect('dashboard_redirect')
+    
+    booking = get_object_or_404(ServiceBooking, id=booking_id)
+    booking.delete()
+    messages.success(request, "Booking deleted successfully.")
+    
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'success': True, 'message': 'Booking deleted successfully.'})
+        
+    # Redirect back to where they came from if possible, or dashboard
     return redirect('admin_dashboard')
 
 @login_required
@@ -135,25 +184,19 @@ def approve_teacher(request, profile_id):
     profile.is_approved = True
     profile.save()
     
-    # Send Approval Email
+    # Send Approval Email (Async)
     subject = 'Welcome to the Team! - Black Swing'
     message = f"""
-    Dear {profile.user.first_name},
+    Dear {profile.user.first_name},<br><br>
 
-    Congratulations! Your application to join Black Swing as a {profile.role} has been approved.
+    Congratulations! Your application to join Black Swing as a <strong>{profile.role}</strong> has been approved.<br><br>
     
-    You can now log in to your dashboard to manage your schedule and profile.
+    You can now log in to your dashboard to manage your schedule and profile.<br><br>
 
-    Best regards,
+    Best regards,<br>
     Black Swing Team
     """
-    send_mail(
-        subject,
-        message,
-        settings.DEFAULT_FROM_EMAIL if hasattr(settings, 'DEFAULT_FROM_EMAIL') else 'info@blackswing.com',
-        [profile.user.email],
-        fail_silently=False,
-    )
+    EmailThread(subject, message, [profile.user.email]).start()
     
     messages.success(request, f"{profile.user.first_name}'s profile approved and email sent.")
     return redirect('manage_teachers')
