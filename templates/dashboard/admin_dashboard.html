@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="breadcrumbs">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Admin Dashboard</h2>
+            <ol>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li>Admin</li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<section class="inner-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <h4 class="card-title">Super Admin</h4>
+                        <img src="https://via.placeholder.com/150" alt="Admin" class="rounded-circle img-fluid mb-3">
+                        <p class="text-muted">{{ user.email }}</p>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'admin:index' %}" class="btn btn-outline-dark btn-sm">Legacy Admin Panel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="row">
+                    <!-- Stats Cards -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card text-white bg-primary">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Users</h5>
+                                <p class="card-text fs-2">25</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card text-white bg-success">
+                            <div class="card-body">
+                                <h5 class="card-title">Band Members</h5>
+                                <p class="card-text fs-2">5</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card text-white bg-warning">
+                            <div class="card-body">
+                                <h5 class="card-title">Pending Bookings</h5>
+                                <p class="card-text fs-2">3</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                Manager Teachers
+                            </div>
+                            <div class="card-body">
+                                <p>Add, edit, or remove band members and teachers.</p>
+                                <a href="#" class="btn btn-primary">Manage Teachers</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                Content Management
+                            </div>
+                            <div class="card-body">
+                                <p>Update homepage content, services, and portfolio.</p>
+                                <a href="#" class="btn btn-primary">Manage Content</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">Recent Activity</div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">User John Doe registered.</li>
+                            <li class="list-group-item">Booking request from Sarah for Guitar Lesson.</li>
+                            <li class="list-group-item">New portfolio item added.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

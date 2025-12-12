@@ -10,7 +10,7 @@ def register_student(request):
             user = form.save()
             login(request, user)
             messages.success(request, "Registration successful.")
-            return redirect('index')
+            return redirect('dashboard_redirect')
         messages.error(request, "Unsuccessful registration. Invalid information.")
     else:
         form = StudentRegistrationForm()
@@ -26,7 +26,7 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}.")
-                return redirect('index')
+                return redirect('dashboard_redirect')
             else:
                 messages.error(request, "Invalid username or password.")
         else:

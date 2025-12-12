@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="breadcrumbs">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Teacher Dashboard</h2>
+            <ol>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li>Dashboard</li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<section class="inner-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <!-- We might need to handle if member_profile exists safely -->
+                        {% if user.member_profile.image %}
+                        <img src="{{ user.member_profile.image.url }}" alt="avatar" class="rounded-circle img-fluid"
+                            style="width: 150px;">
+                        {% else %}
+                        <img src="https://via.placeholder.com/150" alt="avatar" class="rounded-circle img-fluid"
+                            style="width: 150px;">
+                        {% endif %}
+                        <h5 class="my-3">{{ user.first_name }} {{ user.last_name }}</h5>
+                        <p class="text-muted mb-1">{{ user.member_profile.role }}</p>
+                        <p class="text-muted mb-4">Band Member / Teacher</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h3>Upcoming Lessons</h3>
+                        <p>No upcoming lessons scheduled.</p>
+                        <!-- Schedule list will go here -->
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h3>My Students</h3>
+                        <p>Student list management.</p>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h3>Content Management</h3>
+                        <a href="#" class="btn btn-secondary">Create Post</a>
+                        <a href="#" class="btn btn-secondary">Manage Portfolio</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

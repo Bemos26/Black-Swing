@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'portfolio',
     'booking',
     'payments',
+    'dashboard',
 ]
 
 MIDDLEWARE = [

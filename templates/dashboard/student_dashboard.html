@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="breadcrumbs">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Student Dashboard</h2>
+            <ol>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li>Dashboard</li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<section class="inner-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <img src="{% if user.member_profile.image %}{{ user.member_profile.image.url }}{% else %}https://via.placeholder.com/150{% endif %}"
+                            alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                        <h5 class="my-3">{{ user.first_name }} {{ user.last_name }}</h5>
+                        <p class="text-muted mb-1">Student</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h3>My Bookings</h3>
+                        <p>No active bookings.</p>
+                        <!-- Booking list will go here -->
+                        <a href="#" class="btn btn-primary">Book a Lesson</a>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h3>Account Management</h3>
+                        <p>Manage your profile and settings.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
