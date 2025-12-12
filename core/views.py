@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from portfolio.models import Project
 
 def index(request):
-    return render(request, 'core/index.html')
+    projects = Project.objects.all()
+    return render(request, 'core/index.html', {'projects': projects})
 
 def service_details(request):
     return render(request, 'core/service_details.html')
