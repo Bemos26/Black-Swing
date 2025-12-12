@@ -82,7 +82,14 @@
                         {% endfor %}
                         {% endif %}
 
-                        <form method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            Please correct the errors below.
+                            {{ form.errors }}
+                        </div>
+                        {% endif %}
+
+                        <form method="post" class="" data-aos="fade-up" data-aos-delay="200">
                             {% csrf_token %}
                             <div class="row gy-4">
                                 <div class="col-md-6">
