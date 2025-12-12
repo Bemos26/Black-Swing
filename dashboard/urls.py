@@ -20,6 +20,10 @@ urlpatterns = [
     path('admin/team/add/', views.add_team_member, name='add_team_member'),
     path('admin/team/delete/<int:member_id>/', views.delete_team_member, name='delete_team_member'),
     
+    path('admin/users/', views.manage_users, name='manage_users'),
+    path('admin/users/suspend/<int:user_id>/', views.suspend_user, name='suspend_user'),
+    path('admin/users/delete/<int:user_id>/', views.delete_user, name='delete_user'),
+    
     path('student/', views.student_dashboard, name='student_dashboard'),
     path('teacher/', views.teacher_dashboard, name='teacher_dashboard'),
     path('teacher/apply/', views.apply_teacher, name='apply_teacher'),

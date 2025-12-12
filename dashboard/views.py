@@ -418,3 +418,56 @@ def delete_team_member(request, member_id):
     member.delete()
     messages.success(request, "Team member deleted successfully.")
     return redirect('manage_team')
+
+@login_required
+def manage_users(request):
+    if not request.user.is_superuser:
+        return redirect('dashboard_redirect')
+    
+    # Get all non-superuser users
+    users = CustomUser.objects.filter(is_superuser=False).select_related('member_profile').order_by('-date_joined')
+    
+    # Add user type info
+    user_list = []
+    for user in users:
+        user_info = {
+            'user': user,
+            'type': user.user_type,
+            'is_teacher': hasattr(user, 'member_profile'),
+            'is_approved': hasattr(user, 'member_profile') and user.member_profile.is_approved if hasattr(user, 'member_profile') else None,
+        }
+        user_list.append(user_info)
+    
+    return render(request, 'dashboard/manage_users.html', {'user_list': user_list})
+
+@login_required
+def suspend_user(request, user_id):
+    if not request.user.is_superuser:
+        return redirect('dashboard_redirect')
+    
+    user = get_object_or_404(CustomUser, id=user_id)
+    
+    # Toggle suspension status
+    user.is_suspended = not user.is_suspended
+    user.save()
+    
+    status = "suspended" if user.is_suspended else "unsuspended"
+    messages.success(request, f"User {user.username} has been {status}.")
+    return redirect('manage_users')
+
+@login_required
+def delete_user(request, user_id):
+    if not request.user.is_superuser:
+        return redirect('dashboard_redirect')
+    
+    user = get_object_or_404(CustomUser, id=user_id)
+    
+    # Prevent deleting yourself
+    if user == request.user:
+        messages.error(request, "You cannot delete your own account.")
+        return redirect('manage_users')
+    
+    username = user.username
+    user.delete()
+    messages.success(request, f"User {username} has been deleted.")
+    return redirect('manage_users')

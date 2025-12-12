@@ -2,8 +2,16 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class CustomUser(AbstractUser):
+    USER_TYPE_CHOICES = [
+        ('student', 'Student'),
+        ('teacher', 'Teacher'),
+        ('admin', 'Admin'),
+    ]
+    
     is_member = models.BooleanField(default=False)
     is_student = models.BooleanField(default=False)
+    is_suspended = models.BooleanField(default=False, db_index=True, help_text="Suspended users cannot login")
+    user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='student', db_index=True)
 
 class MemberProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='member_profile')

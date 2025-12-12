@@ -40,6 +40,11 @@ def login_view(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
+                # Check if user is suspended
+                if user.is_suspended:
+                    messages.error(request, "Your account has been suspended. Please contact the administrator.")
+                    return redirect('login')
+                
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}.")
                 return redirect('dashboard_redirect')

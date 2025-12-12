@@ -25,6 +25,7 @@ class StudentRegistrationForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.is_student = True
+        user.user_type = 'student'
         if commit:
             user.save()
         return user
@@ -83,6 +84,7 @@ class TeacherRegistrationForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.is_member = True
+        user.user_type = 'teacher'
         if commit:
             user.save()
             # Create MemberProfile
