@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url # Import dj-database-url to parse database URLs for production
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +22,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-pw%250gq!_@*r89s&7$f3&e+e62z0=3=s=7=7=7=7=7=7=7=7'
+# Fetch SECRET_KEY from environment variables for security in production.
+# Provide a default for local development.
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-pw%250gq!_@*r89s&7$f3&e+e62z0=3=s=7=7=7=7=7=7=7=7')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Disable DEBUG mode when running on Render by checking for the 'RENDER' environment variable.
+if 'RENDER' in os.environ:
+    DEBUG = False
+else:
+    DEBUG = True
 
+# Allow the Render host to access the application.
+# RENDER_EXTERNAL_HOSTNAME is automatically set by Render.
 ALLOWED_HOSTS = []
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
@@ -47,6 +60,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Add WhiteNoiseMiddleware to serve static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -80,11 +94,15 @@ WSGI_APPLICATION = 'black_swing.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# Database
+# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+# Configure database settings automatically using dj-database-url.
+# This defaults to SQLite locally but uses the DATABASE_URL environment variable on Render (PostgreSQL).
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        conn_max_age=600
+    )
 }
 
 
@@ -122,10 +140,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.1/howto/static-files/
+
 STATIC_URL = 'static/'
+
+# Tell Django where to look for static files during development
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+# The absolute path to the directory where collectstatic will collect static files for deployment.
+# This is required for Render (and most production environments).
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Use WhiteNoise to serve static files with compression and caching support.
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

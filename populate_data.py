@@ -1,5 +1,10 @@
-
 import os
+import django
+
+# Setup Django environment
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'black_swing.settings')
+django.setup()
+
 from django.core.files import File
 from portfolio.models import Project, TeamMember
 
@@ -61,8 +66,8 @@ def populate_data():
                 bio=f"Professional {member['role']} player."
             )
             if member['image'] and os.path.exists(member['image']):
-                with open(member['image'], 'rb') asf:
-                    tm.image.save(os.path.basename(member['image']), File(asf), save=False)
+                with open(member['image'], 'rb') as f:
+                    tm.image.save(os.path.basename(member['image']), File(f), save=False)
             tm.save()
             print(f"Added team member: {member['name']}")
 
