@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: black-swing
+    env: python
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: gunicorn black_swing.wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
+      - key: DATABASE_URL
+        sync: false
