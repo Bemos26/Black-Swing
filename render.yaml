@@ -1,3 +1,9 @@
+databases:
+  - name: black-swing-db
+    databaseName: black_swing
+    user: black_swing
+    plan: free
+
 services:
   - type: web
     name: black-swing
@@ -13,4 +19,6 @@ services:
       - key: WEB_CONCURRENCY
         value: 4
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: black-swing-db
+          property: connectionString
