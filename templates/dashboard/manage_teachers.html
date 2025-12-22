@@ -69,11 +69,13 @@
                                         <i class="bi bi-check-lg"></i>
                                     </a>
                                     {% endif %}
-                                    <a href="{% url 'delete_teacher' teacher.id %}" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Are you sure? This will delete the user account entirely.')"
-                                        title="Delete">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
+                                    <form action="{% url 'delete_teacher' teacher.id %}" method="POST" class="d-inline"
+                                        onsubmit="return confirm('Are you sure? This will delete the user account entirely.')">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                             {% empty %}

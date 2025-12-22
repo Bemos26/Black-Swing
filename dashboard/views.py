@@ -102,17 +102,18 @@ def delete_teacher(request, profile_id):
     if not request.user.is_superuser:
         return redirect('dashboard_redirect')
     
-    profile = get_object_or_404(MemberProfile, id=profile_id)
-    user = profile.user
-    
-    # Delete profile and user
-    user.delete()
-    
-    messages.success(request, "Teacher account deleted successfully.")
-    
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({'success': True, 'message': 'Teacher account deleted successfully.'})
+    if request.method == 'POST':
+        profile = get_object_or_404(MemberProfile, id=profile_id)
+        user = profile.user
         
+        # Delete profile and user
+        user.delete()
+        
+        messages.success(request, "Teacher account deleted successfully.")
+        
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': True, 'message': 'Teacher account deleted successfully.'})
+            
     return redirect('manage_teachers')
 
 @login_required
