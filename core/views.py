@@ -60,6 +60,10 @@ def test_email_view(request):
         return HttpResponse("Please provide an email query parameter: /test-email/?email=your@email.com")
         
     try:
+        print(f"DEBUG: Attempting to send email...")
+        print(f"DEBUG: HOST={settings.EMAIL_HOST} PORT={settings.EMAIL_PORT}")
+        print(f"DEBUG: USER={settings.EMAIL_HOST_USER} SSL={settings.EMAIL_USE_SSL} TLS={settings.EMAIL_USE_TLS}")
+        
         send_mail(
             'Test Email from Black Swing (Browser)',
             'This is a test email sent via the browser test view.',
@@ -67,6 +71,8 @@ def test_email_view(request):
             [recipient],
             fail_silently=False,
         )
+        print("DEBUG: Email sent successfully!")
         return HttpResponse(f"Successfully sent email to {recipient}")
     except Exception as e:
+        print(f"DEBUG: Error sending email: {e}")
         return HttpResponse(f"Error sending email: {str(e)}")
