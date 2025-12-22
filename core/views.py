@@ -52,6 +52,8 @@ def portfolio_details(request):
 
 def test_email_view(request):
     from django.http import HttpResponse
+    from django.core.mail import send_mail
+    from django.conf import settings
     
     recipient = request.GET.get('email')
     if not recipient:
