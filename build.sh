@@ -10,3 +10,6 @@ python manage.py collectstatic --no-input
 
 # Apply database migrations
 python manage.py migrate
+
+# Create superuser if not exists
+python ensure_superuser.py
