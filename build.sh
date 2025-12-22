@@ -13,3 +13,6 @@ python manage.py migrate
 
 # Create superuser if not exists
 python ensure_superuser.py
+
+# Populate default services
+python populate_services.py
