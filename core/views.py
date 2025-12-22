@@ -49,3 +49,22 @@ def service_details(request, slug):
 
 def portfolio_details(request):
     return render(request, 'core/portfolio_details.html')
+
+def test_email_view(request):
+    from django.http import HttpResponse
+    
+    recipient = request.GET.get('email')
+    if not recipient:
+        return HttpResponse("Please provide an email query parameter: /test-email/?email=your@email.com")
+        
+    try:
+        send_mail(
+            'Test Email from Black Swing (Browser)',
+            'This is a test email sent via the browser test view.',
+            settings.DEFAULT_FROM_EMAIL,
+            [recipient],
+            fail_silently=False,
+        )
+        return HttpResponse(f"Successfully sent email to {recipient}")
+    except Exception as e:
+        return HttpResponse(f"Error sending email: {str(e)}")
