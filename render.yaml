@@ -22,3 +22,8 @@ services:
         fromDatabase:
           name: black-swing-db
           property: connectionString
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+
