@@ -16,3 +16,6 @@ python ensure_superuser.py
 
 # Populate default services
 python populate_services.py
+
+# Import manual images
+python manage.py import_images
