@@ -37,6 +37,12 @@ class Command(BaseCommand):
                 elif 'live_performance_quartet' in filename.lower():
                     title = "The Full Swing Experience"
                     description = "Bringing energy, elegance, and the timeless spirit of swing to life. A night to remember."
+                elif 'post_performance_team_1' in filename.lower():
+                    title = "Post-Show Glow"
+                    description = "The team taking a moment to celebrate a successful performance. Sharp suits, great vibes."
+                elif 'post_performance_team_2' in filename.lower():
+                    title = "Ready for the Next Gig"
+                    description = "Instruments packed, spirits high. The Black Swing team is always ready to bring the music to you."
 
                 # Check if a project with this image path already exists to avoid duplicates
                 # This is a bit tricky since ImageField stores relative path.
