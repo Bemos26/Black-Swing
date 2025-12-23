@@ -84,6 +84,10 @@ class Command(BaseCommand):
                         name = "Morgan Gitonga"
                         role = "trumpet"
                         bio = "A virtuoso of the trumpet, delivering sharp, precise, and soaring melodies that define the Black Swing sound."
+                    elif 'denzel_ccoga' in filename.lower():
+                        name = "Denzel Ccoga"
+                        role = "clarinet"
+                        bio = "Weaving intricate melodies with grace and precision, bridging classical technique with the spontaneous spirit of jazz."
 
                     self.stdout.write(f"Adding team member image: {name}")
                     TeamMember.objects.get_or_create(
