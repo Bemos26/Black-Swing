@@ -25,9 +25,18 @@ class Command(BaseCommand):
                 
                 # Special case for the image provided by user
                 description = ""
-                if 'live_performance' in filename.lower():
+                if 'live_performance.jpg' in filename.lower():
                     description = "The Black Swing team delivering a captivating live performance."
                     title = "Live Performance"
+                elif 'live_performance_trio' in filename.lower():
+                    title = "Harmonizing Brass"
+                    description = "Our trio delivering soulful melodies and impeccable harmony at a recent private gala."
+                elif 'live_performance_sax_solo' in filename.lower():
+                    title = "Saxophone Serenade"
+                    description = "Capturing the deep, resonant essence of jazz with every note. Pure passion on stage."
+                elif 'live_performance_quartet' in filename.lower():
+                    title = "The Full Swing Experience"
+                    description = "Bringing energy, elegance, and the timeless spirit of swing to life. A night to remember."
 
                 # Check if a project with this image path already exists to avoid duplicates
                 # This is a bit tricky since ImageField stores relative path.
@@ -58,14 +67,22 @@ class Command(BaseCommand):
                 if not TeamMember.objects.filter(image=relative_path).exists():
                      # Try to find a member with this name to update, or create new?
                      # Ideally we just update the image of existing member if name matches, or create new.
-                     # Let's simple create new if not exists, but names might collide.
                      # Simplified: If no member has this image, create one.
+                    
+                    role = 'other'
+                    bio = 'Band member'
+
+                    if 'ben_griffin' in filename.lower():
+                        name = "Ben Griffin"
+                        role = "saxophone"
+                        bio = "The soul of the saxophone, bringing smooth jazz lines and energetic solos to every performance."
+
                     self.stdout.write(f"Adding team member image: {name}")
                     TeamMember.objects.get_or_create(
                         name=name,
                         defaults={
-                            'role': 'other',
+                            'role': role,
                             'image': relative_path,
-                            'bio': 'Band member'
+                            'bio': bio
                         }
                     )
